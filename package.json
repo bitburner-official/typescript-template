@@ -1,0 +1,29 @@
+{
+  "name": "bitburner-typescript-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch": "npx tsc -w",
+    "lint": "eslint . --ext .ts",
+    "defs": "node ./updateDefs.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bitburner-official/vscode-template.git"
+  },
+  "author": "SlyCedix",
+  "bugs": {
+    "url": "https://github.com/bitburner-official/vscode-template/issues"
+  },
+  "homepage": "https://github.com/bitburner-official/vscode-template#readme",
+  "devDependencies": {
+    "@types/lodash": "^4.14.178",
+    "@types/node": "^16.4.3",
+    "@typescript-eslint/eslint-plugin": "^4.28.4",
+    "@typescript-eslint/parser": "^4.28.4",
+    "eslint": "^7.31.0",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.3.5"
+  }
+}
