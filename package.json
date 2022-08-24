@@ -2,10 +2,11 @@
   "name": "bitburner-typescript-template",
   "version": "0.0.0",
   "scripts": {
-    "watch": "npx tsc -w"
+    "watch": "(npx bitburner-filesync &) && npx tsc -w"
   },
   "author": "hydroflame, based on work by SlyCedix",
   "devDependencies": {
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "bitburner-filesync": "^1.0.0"
   }
 }
