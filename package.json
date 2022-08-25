@@ -2,7 +2,8 @@
   "name": "bitburner-typescript-template",
   "version": "1.0.0",
   "scripts": {
-    "watch": "(npx bitburner-filesync &) && npx tsc -w"
+    "transpile": "npx tsc -w",
+    "watch": "npx bitburner-filesync"
   },
   "author": "hydroflame, Hoekstraa, based on work by SlyCedix",
   "devDependencies": {

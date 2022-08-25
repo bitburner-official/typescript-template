@@ -6,7 +6,7 @@
   "quiet": false,
   "dry": false,
   "definitionFile": {
-    "update": false,
-    "location": "NetScriptDefinitions.d.ts"
+    "update": true,
+    "location": "NetscriptDefinitions.d.ts"
   }
 }
