@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "watch": "npx tsc -w",
-    "sync": "npx bitburner-filesync"
+    "sync": "npx bitburner-filesync@latest"
   },
   "author": "hydroflame, Hoekstraa, based on work by SlyCedix",
   "devDependencies": {
