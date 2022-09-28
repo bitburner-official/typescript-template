@@ -13,7 +13,12 @@ npm i
 
 Write all your typescript source code in the `/src` directory
 
-To autocompile as you save, run `npm run watch` in a terminal
+To autocompile as you save, run `npm run transpile` in a terminal.
+To send changed files as you save, run `npm run watch` in a terminal.
+Have them both running simultaneously so that it all happens automatically.
+
+For Bitburner to receive any files, you need to enter the port `npm run watch` logs to the terminal
+in the Remote API section of the game settings, and press the connect button.
 
 ## Imports
 
@@ -43,6 +48,6 @@ To import `someFunction` from the file `main.ts` located in the `src/` directory
 import { someFunction } from "main";
 ```
 
-## Deugging
+## Debugging
 
 For debugging bitburner on Steam you will need to enable a remote debugging port. This can be done by rightclicking bitburner in your Steam library and selecting properties. There you need to add `--remote-debugging-port=9222` [Thanks @DarkMio]
