@@ -17,41 +17,42 @@ If you need help with your particular system, feel free to ask for help in the O
 - If you're unfamiliar with Git and have no intention to use it:
   - Press the Download Zip button
   - Extract the zip anywhere, for example `C:\Users\yourusername\Workspace\BitburnerScripts` on Windows or `~/Workspace/BitburnerScripts` on Other
-	
-### 4. Start the Remote File API server
+
+### 4. Open a terminal pointed at your scripts folder
 - Open command prompt / terminal
   - Windows: Open start menu and type `cmd` (enter)  
   - Mac: Click the Launchpad icon in the Dock, type `Terminal` in the search field, then click Terminal.
 - To go to the directory you just created:  
   - Windows: Type `cd ` and drag the folder you created to the cmd window, or type `cd C:\Users\yourusername\Workspace\BitburnerScripts` or whatever folder you chose previously.  
-  - Mac: Type `cd ` and drag the folder you created to the terminal window, or type `cd ~/Workspace/BitburnerScripts` or whatever folder you chose previously. 
+  - Mac: Type `cd ` and drag the folder you created to the terminal window, or type `cd ~/Workspace/BitburnerScripts` or whatever folder you chose previously.
 
+### 5. Install the needed programs
 - type `npm install`
-- type `npm run watch`
-- If NPM asks if you want to install something it needs, answer `y` for yes.
-- Your firewall may yell at you; allow the connection.
-
-### 5. Go back to Bitburner.
-- Options -> Remote API -> type in the port: `12525` -> click connect. The icon should turn green and say it's online.
-- Your firewall may yell at you again; allow the connection.
 
 ### 6. Starting the Typescript transpiler
 - DON'T SKIP EVEN WHEN USING JS ONLY
-- Open another cmd/terminal window just like you did in step 4.
-- This time run the command `npm run transpile` in your folder.
-  Yes, you need them both to be running at the same time.
-- Put your .ts files to the `src\` directory.
+- In the terminal you opened, run the command `npm run transpile` in your folder.
 
-### 7. Test that the connection works
+### 7. Start the Remote File API server
+- Open another terminal pointed at your scripts folder, like in step #4.
+- Type `npm run watch`
+- If NPM asks if you want to install something it needs, answer `y` for yes.
+- Your firewall may yell at you; allow the connection.
+
+### 8. Go back to Bitburner.
+- Options -> Remote API -> type in the port: `12525` -> click connect. The icon should turn green and say it's online.
+- Your firewall may yell at you again; allow the connection.
+
+### 9. Test that the connection works
 - You should see a file `template.js` in the root of your `home` server in Bitburner.
 - You should see a NetscriptDefinitions.d.ts automatically appear in the folder on your computer (ex. `C:\Users\yourusername\Workspace\BitburnerScripts\NetscriptDefinitions.d.ts`).
 
-### 8. Try some other files too!
+### 10. Try some other files too!
 - Copy/create a .js to the `src` folder on your computer and check Bitburner. The file should be transferred!
 - Sadly, at the time of writing, Typescript doesn't support 'compiling' text files. So copy/create a .txt in the `dist` folder and check Bitburner. This file should be transferred as well.
 
 	
-### 9. Thats it!
+### 11. Thats it!
 - You can now make and edit the files in the `src` directory to your liking, and have them be changed in Bitburner automatically.
 <br />
 <br />
