@@ -24,7 +24,7 @@ If you need help with your particular system, feel free to ask for help in the O
   - Mac: Click the Launchpad icon in the Dock, type `Terminal` in the search field, then click Terminal.
 - To go to the directory you just created:  
   - Windows: Type `cd ` and drag the folder you created to the cmd window, or type `cd C:\Users\yourusername\Workspace\BitburnerScripts` or whatever folder you chose previously.  
-  - Mac: Type `cd ` drag the folder you created to the terminal window, or type `cd ~/Workspace/BitburnerScripts` or whatever folder you chose previously. 
+  - Mac: Type `cd ` and drag the folder you created to the terminal window, or type `cd ~/Workspace/BitburnerScripts` or whatever folder you chose previously. 
 
 - type `npm install`
 - type `npm run watch`
