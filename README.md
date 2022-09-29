@@ -3,12 +3,13 @@
 [Node.js](https://nodejs.org/en/download/) required for compiling typescript and installing dependencies
 
 ## Installation
+  
 
 ```
 git clone https://github.com/bitburner-official/typescript-template
 npm i
 ```
-
+- Click [here](https://github.com/bitburner-official/typescript-template/guide_for_dummies.md) for step by step installation if you haven't used node.js before
 ## How to use this template
 
 Write all your typescript source code in the `/src` directory
