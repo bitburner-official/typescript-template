@@ -2,7 +2,7 @@
 
 The official template for synchronizing Typescript/Javascript from your computer to the game.
 
-[Step by step install](https://github.com/bitburner-official/typescript-template/guide_for_dummies.md)
+[Step by step install](guide_for_dummies.md)
 
 [Learn more about Typescript](https://www.typescriptlang.org/docs/)
 
