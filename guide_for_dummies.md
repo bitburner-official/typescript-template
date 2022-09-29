@@ -44,10 +44,11 @@ If you need help with your particular system, feel free to ask for help in the O
 
 ### 7. Test that the connection works
 - You should see a file `template.js` in the root of your `home` server in Bitburner.
-- You should see a NetscriptDefinitions.d.ts automatically appear in the `src` folder on your computer.
+- You should see a NetscriptDefinitions.d.ts automatically appear in the folder on your computer (ex. `C:\Users\yourusername\Workspace\BitburnerScripts\NetscriptDefinitions.d.ts`).
 
 ### 8. Try some other files too!
-- Copy/create a .js and a .txt file to the `src` directory on your computer and check Bitburner. The files should be transferred!
+- Copy/create a .js to the `src` folder on your computer and check Bitburner. The file should be transferred!
+- Sadly, at the time of writing, Typescript doesn't support 'compiling' text files. So copy/create a .txt in the `dist` folder and check Bitburner. This file should be transferred as well.
 
 	
 ### 9. Thats it!
