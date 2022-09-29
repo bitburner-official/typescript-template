@@ -15,7 +15,7 @@ Due to the usage of the RFA system, it works with Web and Electron versions of t
 
 [Node.js](https://nodejs.org/en/download/) is needed for compiling typescript and installing dependencies
 
-[See here for step by step installation](https://github.com/bitburner-official/typescript-template/guide_for_dummies.md) if you'd like help with installing Node and/or connecting to the game.
+[See here for step by step installation](guide_for_dummies.md) if you'd like help with installing Node and/or connecting to the game.
 
 ## Quick start
 
@@ -37,7 +37,7 @@ Have them both running simultaneously so that it all happens automatically.
 For Bitburner to receive any files, you need to enter the port `npm run watch` logs to the terminal
 in the Remote API section of the game settings, and press the connect button.
 
-[See here for step by step installation](https://github.com/bitburner-official/typescript-template/guide_for_dummies.md) if you'd like help with installing Node and/or connecting to the game.
+[See here for step by step installation](guide_for_dummies.md) if you'd like help with installing Node and/or connecting to the game.
 
 ## Advanced
 ### Imports
