@@ -85,6 +85,6 @@ async function syncTypeScript() {
   return watchTypeScript();
 }
 
-console.log('INIT watching static and ts files...');
+console.log('Start watching static and ts files...');
 syncStatic();
 syncTypeScript();
