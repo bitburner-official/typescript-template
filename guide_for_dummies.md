@@ -29,30 +29,26 @@ If you need help with your particular system, feel free to ask for help in the O
 ### 5. Install the needed programs
 - type `npm install`
 
-### 6. Starting the Typescript transpiler
-- DON'T SKIP EVEN WHEN USING JS ONLY
-- In the terminal you opened, run the command `npm run transpile` in your folder.
-
-### 7. Start the Remote File API server
-- Open another terminal pointed at your scripts folder, like in step #4.
-- Type `npm run watch`
+### 6. Starting the watch services
+- In the terminal you opened, run the command `npm run watch` in your folder.
 - If NPM asks if you want to install something it needs, answer `y` for yes.
 - Your firewall may yell at you; allow the connection.
+- If the terminal shows `error TS2307: Cannot find module '@ns' or its corresponding type declarations.` (or see the same error at your editor), it is fine. The missing type declaration `NetscriptDefinitions.d.ts` will be downloaded from the game once connected.
 
-### 8. Go back to Bitburner.
+### 7. Go back to Bitburner.
 - Options -> Remote API -> type in the port: `12525` -> click connect. The icon should turn green and say it's online.
 - Your firewall may yell at you again; allow the connection.
 
-### 9. Test that the connection works
+### 8. Test that the connection works
 - You should see a file `template.js` in the root of your `home` server in Bitburner.
 - You should see a NetscriptDefinitions.d.ts automatically appear in the folder on your computer (ex. `C:\Users\yourusername\Workspace\BitburnerScripts\NetscriptDefinitions.d.ts`).
 
-### 10. Try some other files too!
+### 9. Try some other files too!
 - Copy/create a .js to the `src` folder on your computer and check Bitburner. The file should be transferred!
-- Sadly, at the time of writing, Typescript doesn't support 'compiling' text files. So copy/create a .txt in the `dist` folder and check Bitburner. This file should be transferred as well.
+- Copy/create a .txt in the `src` folder will be transferred as well now.
 
 	
-### 11. Thats it!
+### 10. Thats it!
 - You can now make and edit the files in the `src` directory to your liking, and have them be changed in Bitburner automatically.
 <br />
 <br />
