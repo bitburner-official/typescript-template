@@ -2,8 +2,12 @@
   "name": "bitburner-typescript-template",
   "version": "1.0.0",
   "scripts": {
-    "transpile": "npx tsc -w",
-    "watch": "npx bitburner-filesync@latest"
+    "watch:transpile": "tsc -w --preserveWatchOutput",
+    "watch:local": "node build/watch.js",
+    "watch:remote": "bitburner-filesync",
+    "watch:init": "node build/init.js",
+    "watch:all": "concurrently npm:watch:transpile npm:watch:local npm:watch:remote",
+    "watch": "npm run watch:init && npm run watch:all"
   },
   "author": "hydroflame, Hoekstraa, based on work by SlyCedix",
   "devDependencies": {
