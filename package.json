@@ -9,7 +9,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.35.1",
     "@typescript-eslint/parser": "^5.35.1",
-    "bitburner-filesync": "^1.0.0",
+    "bitburner-filesync": "^1.1.5",
     "eslint": "^8.22.0",
     "typescript": "^4.7.4"
   }
