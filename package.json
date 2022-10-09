@@ -1,16 +1,24 @@
 {
   "name": "bitburner-typescript-template",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "scripts": {
-    "transpile": "npx tsc -w",
-    "watch": "npx bitburner-filesync@latest"
+    "watch:transpile": "tsc -w --preserveWatchOutput",
+    "watch:local": "node build/watch.js",
+    "watch:remote": "bitburner-filesync",
+    "watch:init": "node build/init.js",
+    "watch:all": "concurrently npm:watch:transpile npm:watch:local npm:watch:remote",
+    "watch": "npm run watch:init && npm run watch:all"
   },
   "author": "hydroflame, Hoekstraa, based on work by SlyCedix",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.35.1",
     "@typescript-eslint/parser": "^5.35.1",
     "bitburner-filesync": "^1.1.5",
+    "chokidar": "^3.5.3",
+    "concurrently": "^7.4.0",
     "eslint": "^8.22.0",
+    "fast-glob": "^3.2.12",
+    "sync-directory": "^5.1.7",
     "typescript": "^4.7.4"
   }
 }

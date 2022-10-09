@@ -17,6 +17,12 @@
     "plugins": [
         "@typescript-eslint"
     ],
+    "ignorePatterns": [
+        "node_modules/**",
+        "build/**",
+        "dist/**",
+        "NetscriptDefinitions.d.ts"
+    ],
     "rules": {
     }
 }
