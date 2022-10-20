@@ -50,9 +50,12 @@ async function initTypeScript() {
   for (const distFile of distFiles) {
     // search existing *.js file in dist
     const relative = path.relative(dist, distFile);
-    const srcFile = path.resolve(src, relative).replace(/\.js$/, '.ts');
+    const srcFile = path.resolve(src, relative);
     // if srcFile does not exist, delete distFile
-    if (!fs.existsSync(srcFile)) {
+    if (
+      !fs.existsSync(srcFile) &&
+      !fs.existsSync(srcFile.replace(/\.js$/, '.ts'))
+    ) {
       await fs.promises.unlink(distFile);
       console.log(`${normalize(relative)} deleted`);
     }
