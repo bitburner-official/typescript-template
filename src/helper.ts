@@ -1,10 +1,11 @@
 import { NS } from "@ns";
 
-interface weightedServers {
-  server: string;
-  score: number;
-}
-
+/**
+ * Scans for all servers in the whole network.
+ *
+ * @param ns - The NetScriptAPI object.
+ * @returns Array of server hostnames as strings.
+ */
 export function scanAllServers(ns: NS) {
   let allServers = new Array<string>();
   let stack = new Array<string>();
@@ -23,6 +24,16 @@ export function scanAllServers(ns: NS) {
   return allServers;
 }
 
+/**
+ * Scans for all servers in a specified depth. The depth
+ * specfies how many hops the servers can be away from
+ * home.
+ *
+ * @param ns - The NetScriptAPI object.
+ * @param n - Number specifying the depth in which the
+ * function scans for servers.
+ * @returns Array containing server hostnames as strings.
+ */
 export function scanDepth(ns: NS, n: number) {
   let allServers = new Array<string>();
   let queue = new Array<{ server: string; depth: number }>();
@@ -44,6 +55,13 @@ export function scanDepth(ns: NS, n: number) {
   return allServers;
 }
 
+/**
+ * Print out the stats of the provided servers
+ * to the terminal.
+ *
+ * @param ns - The NetScriptAPI object.
+ * @param servers - Array containing server hostnames as strings.
+ */
 export function printServers(ns: NS, servers: string[]) {
   // Print table header
   ns.tprintf(
@@ -85,6 +103,13 @@ export function printServers(ns: NS, servers: string[]) {
   }
 }
 
+/**
+ * Print out the stats and score of the provided servers
+ * to the terminal.
+ *
+ * @param ns - The NetScriptAPI object.
+ * @param servers - Array containing server hostnames as strings.
+ */
 export function printServerScores(ns: NS, servers: string[]) {
   // Print table header
   ns.tprintf(
@@ -140,6 +165,17 @@ export function printServerScores(ns: NS, servers: string[]) {
   }
 }
 
+/**
+ * Uses the scanDepth() function and sorts the output after a score.
+ * Score is calculated by adding up the percentage of available money
+ * and the securityScore.
+ *
+ * @param ns - The NetScriptAPI object.
+ * @param depth - Optional. The depth in which the scanDepth() function scans for
+ * servers.
+ * @returns Sorted array of servers with their coresponding scores.
+ *
+ */
 function getWeightedServers(ns: NS, depth: number = 1) {
   // Define array to return at the end
   let weightedServers = [];
@@ -247,4 +283,29 @@ export function deployScripts(
       ns.scp(["hack.js", "grow.js", "weaken.js"], worker.server);
     }
   }
+}
+
+/**
+ * Tries to gain root on the specified server, and returns whether or not we were successfull.
+ *
+ * @param ns - The namespace object used to interact with the game world.
+ * @param server - The hostname of the server to attack.
+ * @returns True if we now have root access and false if we do not.
+ */
+function prepWorker(ns: NS, server: string) {
+  // First check if we still need root access
+  if (!ns.hasRootAccess(server)) {
+    // Check which exploits are available, and use them.
+    if (ns.fileExists("BruteSSH.exe", server)) {
+      ns.brutessh(server);
+    }
+    // ToDo: Add Code for the other exploits
+
+    // After all exploits are run, nuke the server to gain
+    // root access
+    ns.nuke(server);
+  }
+
+  // Return hasRootAccess, so we know if we managed to gain root
+  return ns.hasRootAccess(server);
 }
