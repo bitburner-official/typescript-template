@@ -381,7 +381,6 @@ export function formatTime(milliseconds: number): string {
     { name: "hour", value: 3600000 },
     { name: "minute", value: 60000 },
     { name: "second", value: 1000 },
-    { name: "millisecond", value: 1 },
   ];
 
   // Initialize an empty string to store the result
@@ -400,9 +399,8 @@ export function formatTime(milliseconds: number): string {
       milliseconds -= count * units[i].value;
     }
 
-    // If the result is not empty and the remaining milliseconds are zero, break
-    //the loop
-    if (result && milliseconds === 0) {
+    // If the result is not empty, break the loop
+    if (result) {
       break;
     }
   }

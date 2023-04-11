@@ -51,7 +51,7 @@ export async function main(ns: NS): Promise<void> {
 
     // Print the optimal number of threads for each script
     ns.print(
-      "Optimal threads for " +
+      "Optimal threads for attacking " +
         target +
         ": hack = " +
         hackThreads +
