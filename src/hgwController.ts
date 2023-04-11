@@ -9,10 +9,9 @@ import {
   formatTime,
 } from "./helper";
 
-const scriptRam = 1.75; // Max RAM used by one of the hgw scripts
-
 export async function main(ns: NS): Promise<void> {
   // Settings:
+  const scriptRam = 1.75; // Max RAM used by one of the hgw scripts
   const depth = 1; // Change the depth in which we look for our target
   ns.disableLog("ALL");
 
@@ -62,11 +61,6 @@ export async function main(ns: NS): Promise<void> {
         growThreads
     );
 
-    // Calculate wait time so that the other scripts finish 500ms after the hack script
-    let hackTime = ns.getHackTime(target);
-    let otherTime = Math.max(ns.getWeakenTime(target), ns.getGrowTime(target));
-    let waitTime = Math.max(0, hackTime - otherTime - 500);
-
     // Loop through the worker servers
     for (let worker of workers) {
       // Get the name and available RAM of the worker server
@@ -96,14 +90,6 @@ export async function main(ns: NS): Promise<void> {
       }
     }
 
-    // Wait for a certain time before running other scripts
-    ns.print(
-      "Waiting for " +
-        formatTime(waitTime) +
-        " till we run the grow/weaken tasks."
-    );
-    await ns.sleep(waitTime);
-
     // Calculate wait time for the grow and weaken scripts
     let gwWaitTime =
       Math.max(ns.getWeakenTime(target), ns.getGrowTime(target)) + 500;
@@ -129,7 +115,7 @@ export async function main(ns: NS): Promise<void> {
           "Running " +
             threads +
             " weaken threads on " +
-            name +
+            worker +
             " using " +
             threads * ramPerThread +
             " GB RAM"
@@ -149,7 +135,7 @@ export async function main(ns: NS): Promise<void> {
           "Running " +
             threads +
             " grow threads on " +
-            name +
+            worker +
             " using " +
             threads * ramPerThread +
             " GB RAM"
