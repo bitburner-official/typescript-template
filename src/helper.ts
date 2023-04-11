@@ -220,7 +220,7 @@ export function getTarget(ns: NS, depth: number = 1) {
  * Returns an array of server names that meet the following conditions:
  *  1. have at least 8GB of RAM
  *  2. require a hacking level equal to or lower than the player's hacking level
- *  3. have root access
+ *  3. have root access (or if the server has not root yet, try to gain root)
  *
  * @param ns - The NetScriptAPI object.
  * @param depth - Optional. The maximum depth to search for servers. Default is 1.
@@ -235,23 +235,22 @@ export function getWorkers(ns: NS, depth: number = 1) {
 
   for (let i = 0; i < servers.length; i++) {
     // Check each server if it is a vailable worker for us
-    let serverRam =
-      ns.getServerMaxRam(servers[i]) - ns.getServerUsedRam(servers[i]);
     let serverHackingLevel = ns.getServerRequiredHackingLevel(servers[i]);
     let serverHasRoot = ns.hasRootAccess(servers[i]);
     let playerHackingLevel = ns.getHackingLevel();
 
     // Check if the server is meeting following conditions:
-    //  1. serverRam >= 8
-    //  2. serverHackingLevel <= playerHackingLevel
-    //  3. serverHasRoot
-    if (
-      serverRam >= 8 &&
-      serverHackingLevel <= playerHackingLevel &&
-      serverHasRoot
-    ) {
-      // If conditions are met push the server to the workers array
-      workers.push({ server: servers[i], ram: serverRam });
+    // serverHackingLevel <= playerHackingLevel
+    if (serverHackingLevel <= playerHackingLevel) {
+      if (serverHasRoot) {
+        // If conditions are met push the server to the workers array
+        workers.push(servers[i]);
+      } else {
+        // If server has no root try to gain root
+        if (gainRoot(ns, servers[i])) {
+          workers.push(servers[i]);
+        }
+      }
     }
   }
 
@@ -264,23 +263,17 @@ export function getWorkers(ns: NS, depth: number = 1) {
  *
  * @param ns - The namespace object used to interact with the game world.
  * @param workers - An array of objects representing the workers to deploy scripts to.
- * Each object should have a 'server' property indicating the server hostname, and a 'ram' property indicating the server's RAM.
  */
-export function deployScripts(
-  ns: NS,
-  workers: { server: string; ram: number }[]
-) {
+export function deployScripts(ns: NS, workers: string[]) {
   for (let worker of workers) {
     // Check if scripts exist on target worker
     if (
-      ns.fileExists("hack.js", worker.server) &&
-      ns.fileExists("grow.js", worker.server) &&
-      ns.fileExists("weaken.js", worker.server)
+      !ns.fileExists("hack.js", worker) ||
+      !ns.fileExists("grow.js", worker) ||
+      !ns.fileExists("weaken.js", worker)
     ) {
-      return;
-    } else {
-      // If not copy over the scripts
-      ns.scp(["hack.js", "grow.js", "weaken.js"], worker.server);
+      // Scripts dont exist, copy them over
+      ns.scp(["hack.js", "grow.js", "weaken.js"], worker, "home");
     }
   }
 }
@@ -292,11 +285,11 @@ export function deployScripts(
  * @param server - The hostname of the server to attack.
  * @returns True if we now have root access and false if we do not.
  */
-function prepWorker(ns: NS, server: string) {
+function gainRoot(ns: NS, server: string) {
   // First check if we still need root access
   if (!ns.hasRootAccess(server)) {
     // Check which exploits are available, and use them.
-    if (ns.fileExists("BruteSSH.exe", server)) {
+    if (ns.fileExists("BruteSSH.exe", "home")) {
       ns.brutessh(server);
     }
     // ToDo: Add Code for the other exploits
@@ -308,4 +301,215 @@ function prepWorker(ns: NS, server: string) {
 
   // Return hasRootAccess, so we know if we managed to gain root
   return ns.hasRootAccess(server);
+}
+
+/**
+ * Returns the longer delay it takes to either grow or weaken the server.
+ *
+ * @param ns The game namespace object.
+ * @param server The name of the server.
+ * @returns The longer of the two times, in some unit of time.
+ */
+export function getGrowWeakenTime(ns: NS, server: string): number {
+  // Get the time it takes to grow and weaken the server.
+  let growTime = ns.getGrowTime(server);
+  let weakenTime = ns.getWeakenTime(server);
+
+  // Return the longer of the two times using the Math.max() function.
+  // This simplifies the code and makes it more concise.
+  return Math.max(growTime, weakenTime);
+}
+
+/**
+ * Preps the target till the stats meet the thresholds.
+ *
+ * @param ns The game namespace object.
+ * @param target The hostname of the target as string.
+ * @param workers Array of available workers.
+ * @param scriptRam Amount of Ram needed by the hack/grow/weaken scripts.
+ */
+export async function prepTarget(
+  ns: NS,
+  target: string,
+  workers: string[],
+  scriptRam: number
+) {
+  let moneyThresh = ns.getServerMaxMoney(target) * 0.75;
+  let securityThresh = ns.getServerMinSecurityLevel(target) + 5;
+
+  // Ensure root on target
+  if (!ns.hasRootAccess(target)) {
+    gainRoot(ns, target);
+  }
+
+  while (
+    ns.getServerSecurityLevel(target) > securityThresh ||
+    ns.getServerMoneyAvailable(target) < moneyThresh
+  ) {
+    let growWeakenTime = getGrowWeakenTime(ns, target) + 500;
+    ns.print("Running grow/weaken task in " + formatTime(growWeakenTime));
+    for (let worker of workers) {
+      let serverRamAvail =
+        ns.getServerMaxRam(worker) - ns.getServerUsedRam(worker);
+      let workerThreads = Math.floor(serverRamAvail / scriptRam);
+      if (ns.getServerSecurityLevel(target) <= securityThresh) {
+        ns.exec("grow.js", worker, workerThreads, target);
+      } else if (workerThreads % 2 === 0) {
+        ns.exec("grow.js", worker, workerThreads / 2, target);
+        ns.exec("weaken.js", worker, workerThreads / 2, target);
+      } else {
+        ns.exec("grow.js", worker, (workerThreads + 1) / 2, target);
+        ns.exec("weaken.js", worker, (workerThreads - 1) / 2, target);
+      }
+    }
+    await ns.sleep(growWeakenTime);
+  }
+}
+
+/**
+ * Formats a given number of milliseconds into a human-readable string
+ * with the time in the next biggest type (e.g. 1 minute and 32 seconds for an
+ * input of 92000).
+ * @param milliseconds The number of milliseconds to format.
+ * @returns A string with the formatted time or "0 milliseconds" if the input is
+ * zero or negative.
+ */
+export function formatTime(milliseconds: number): string {
+  // Define the time units and their corresponding values in milliseconds
+  const units = [
+    { name: "day", value: 86400000 },
+    { name: "hour", value: 3600000 },
+    { name: "minute", value: 60000 },
+    { name: "second", value: 1000 },
+    { name: "millisecond", value: 1 },
+  ];
+
+  // Initialize an empty string to store the result
+  let result = "";
+
+  // Loop through the units from largest to smallest
+  for (let i = 0; i < units.length; i++) {
+    // Calculate how many times the current unit fits into the remaining
+    // milliseconds
+    let count = Math.floor(milliseconds / units[i].value);
+
+    // If the count is positive, add it to the result with the unit name
+    if (count > 0) {
+      result += `${count} ${units[i].name}${count > 1 ? "s" : ""} `;
+      // Subtract the counted milliseconds from the remaining milliseconds
+      milliseconds -= count * units[i].value;
+    }
+
+    // If the result is not empty and the remaining milliseconds are zero, break
+    //the loop
+    if (result && milliseconds === 0) {
+      break;
+    }
+  }
+
+  // Return the result or "0 milliseconds" if it is empty
+  return result || "0 milliseconds";
+}
+
+/**
+ * A function that returns an array of numbers representing the optimal amount of threads
+ * to run a script that hacks, weakens and grows a target server.
+ * @param ns The games namespace object.
+ * @param target The name of the target server to hack.
+ * @param maxThreads The maximum number of threads available for the scripts.
+ * @returns An array of numbers [hackThreads, weakenThreads, growThreads], where each number
+ * is the optimal number of threads for the corresponding script.
+ */
+export function optimizeThreads(
+  ns: NS,
+  target: string,
+  maxThreads: number
+): number[] {
+  // Get the target server's minimum security level, maximum money and current values
+  let minSecurity = ns.getServerMinSecurityLevel(target);
+  let maxMoney = ns.getServerMaxMoney(target);
+  let currentSecurity = ns.getServerSecurityLevel(target);
+  let currentMoney = ns.getServerMoneyAvailable(target);
+
+  // Define the thresholds for security and money
+  let securityThreshold = minSecurity + 5;
+  let moneyThreshold = maxMoney * 0.75;
+
+  // Initialize the number of threads for each script
+  let hackThreads = 0;
+  let weakenThreads = 0;
+  let growThreads = 0;
+
+  // Calculate how many threads are needed to hack a certain percentage of money from the target
+  // The percentage is set to 0.7 by default, but can be changed
+  let hackPercentage = 0.7;
+  hackThreads = Math.ceil(hackPercentage / ns.hackAnalyze(target));
+
+  // Calculate how many threads are needed to grow the money by a certain factor
+  // The factor is set to maxMoney / currentMoney by default, but can be changed
+  let growFactor = maxMoney / currentMoney;
+  growThreads = Math.ceil(ns.growthAnalyze(target, growFactor));
+
+  // Calculate how many threads are needed to weaken the security by a certain amount
+  // The amount is set to currentSecurity - minSecurity by default, but can be changed
+  let weakenAmount = currentSecurity - minSecurity;
+  weakenThreads = Math.ceil(weakenAmount / ns.weakenAnalyze(1));
+
+  // Check if there are enough threads available for each script
+  // If not, reduce the number of threads proportionally
+  let totalThreads = hackThreads + weakenThreads + growThreads;
+  if (totalThreads > maxThreads) {
+    let ratio = maxThreads / totalThreads;
+    hackThreads = Math.floor(hackThreads * ratio);
+    weakenThreads = Math.floor(weakenThreads * ratio);
+    growThreads = Math.floor(growThreads * ratio);
+    // Adjust for rounding errors
+    let remainingThreads =
+      maxThreads - (hackThreads + weakenThreads + growThreads);
+    if (remainingThreads > 0) {
+      // Allocate remaining threads to the most needed script
+      if (currentSecurity > securityThreshold) {
+        weakenThreads += remainingThreads;
+      } else if (currentMoney < moneyThreshold) {
+        growThreads += remainingThreads;
+      } else {
+        hackThreads += remainingThreads;
+      }
+    }
+  }
+
+  // Return an array of numbers representing the optimal number of threads for each script
+  return [
+    Math.floor(hackThreads),
+    Math.floor(weakenThreads),
+    Math.floor(growThreads),
+  ];
+}
+
+/**
+ * Returns the max number of threads we can run a script with the given
+ * scriptRam on the provided worker servers.
+ *
+ * @param ns The namespace object of the Netscript API
+ * @param workers Array of hostnames, representing the worker servers.
+ * @param scriptRam Amount of RAM needed to run a script.
+ * @returns The max number of threads we are able to run on all of our workers.
+ */
+export function getMaxThreads(
+  ns: NS,
+  workers: string[],
+  scriptRam: number
+): number {
+  // Initalize our variable
+  let maxThreads = 0;
+
+  // Loop through the worker servers to find out how much threads can be run on each
+  for (let worker of workers) {
+    let workerThreads =
+      (ns.getServerMaxRam(worker) - ns.getServerUsedRam(worker)) / scriptRam;
+    maxThreads += workerThreads;
+  }
+
+  // Return the final result
+  return maxThreads;
 }
