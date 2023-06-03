@@ -7,7 +7,7 @@ export async function main(ns: NS): Promise<void> {
 
     const baseName = "π-"
     let multi = 2 // assumes you need up to 8gb for your hack and distro script. you may be able to lower this accordingly.
-    const maxRam = Math.pow(2, 40)
+    const maxRam = ns.getPurchasedServerMaxRam()
 
     const servers = ns.getPurchasedServers()
     if (servers.length > 0) {

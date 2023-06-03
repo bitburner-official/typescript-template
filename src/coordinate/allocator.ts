@@ -48,7 +48,7 @@ export class Allocator {
         if (!toAllocate) {
             return allocations
         }
-        this.ns.tprintf("Allocating %s for %s: maxThreads=%d => %d", this.scriptName(type), target, maxThreads, toAllocate)
+        this.ns.printf("Allocating %s for %s: maxThreads=%d => %d", this.scriptName(type), target, maxThreads, toAllocate)
         
         const workerEntries =  Array.from(this.capacity.workers.entries())
         workerEntries.sort((a, b) => a[0].localeCompare(b[0]))
@@ -68,7 +68,7 @@ export class Allocator {
                 this.capacity.workers.delete(hostname)
             }
             toAllocate -= allocated
-            this.ns.tprintf("Allocating threads for %s on %s: %d, capacity:%s", 
+            this.ns.printf("Allocating threads for %s on %s: %d, capacity:%s", 
                 target, hostname, allocated, JSON.stringify(this.capacity))
             this.allocateThreads(type, allocated)
 
