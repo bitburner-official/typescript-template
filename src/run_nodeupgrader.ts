@@ -16,13 +16,14 @@ export async function main(ns : NS) : Promise<void> {
     const ram = 64
     const level = 200    
     
+    // eslint-disable-next-line no-constant-condition
     while(true) {
         while(hacknet.numNodes() < nodes) {
             const cost = hacknet.getPurchaseNodeCost()
             if (myMoney() < cost) {
                 break
             }
-            const res = await hacknet.purchaseNode()
+            const res = hacknet.purchaseNode()
             ns.print("Purchased hacknet Node with index " + res)
         }
         
@@ -32,7 +33,7 @@ export async function main(ns : NS) : Promise<void> {
                 if (myMoney() < cost) {
                     break
                 }
-                await hacknet.upgradeLevel(i, 10)
+                hacknet.upgradeLevel(i, 10)
                 ns.print("Upgraded hacknet Node level with index " + i)
             }
         }
@@ -43,7 +44,7 @@ export async function main(ns : NS) : Promise<void> {
                 if (myMoney() < cost) {
                     break
                 }
-                await hacknet.upgradeRam(i, 2)
+                hacknet.upgradeRam(i, 2)
                 ns.print("Upgraded hacknet Node ram with index " + i)
             }
         }
@@ -54,7 +55,7 @@ export async function main(ns : NS) : Promise<void> {
                 if (myMoney() < cost) {
                     break
                 }
-                await hacknet.upgradeCore(i, 1)
+                hacknet.upgradeCore(i, 1)
                 ns.print("Upgraded hacknet Node cores with index " + i)
             }
         }

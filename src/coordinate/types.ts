@@ -3,12 +3,15 @@ export interface Grow {
     hostname: string;
     threads: number;
     time: number;
+    earning: number;
+    security: number
 }
 
 export interface Hack {
     hostname: string;
     earnings: number;
     threads: number;
+    chance: number;
     time: number;
     security: number[];
 }

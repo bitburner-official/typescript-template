@@ -51,7 +51,7 @@ export class Allocator {
         this.ns.printf("Allocating %s for %s: maxThreads=%d => %d", this.scriptName(type), target, maxThreads, toAllocate)
         
         const workerEntries =  Array.from(this.capacity.workers.entries())
-        workerEntries.sort((a, b) => a[0].localeCompare(b[0]))
+        workerEntries.sort((a, b) => a[1] - b[1])
         for (const entry of workerEntries) {
             const hostname = entry[0]
             const available = entry[1]

@@ -4,6 +4,7 @@ import { PortOpener } from 'lib/port_opener'
 
 export async function main(ns : NS) : Promise<void> {
 
+    // eslint-disable-next-line no-constant-condition
     while (true) {
         const hosts = new Scanner().scan(ns)
 
