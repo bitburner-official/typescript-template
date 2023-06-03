@@ -59,7 +59,8 @@ export class Coordinator {
 
         const eligable = targets.filter((target) => {
             return (target.moneyMax ?? 0)> 0 && 
-                (target.moneyAvailable ?? 0) > (target.moneyMax ?? 0) * 0.95
+                (target.moneyAvailable ?? 0) > (target.moneyMax ?? 0) * 0.95 &&
+                ns.hackAnalyzeChance(target.hostname) > 0.5
         })
 
         const inOrder = eligable
