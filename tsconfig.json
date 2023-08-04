@@ -8,6 +8,7 @@
     "noImplicitThis": true,
     "esModuleInterop": true,
     "inlineSourceMap": true,
+    "inlineSources": true,
     "strict": true,
     "rootDir": "src/",
     "outDir": "dist/",
