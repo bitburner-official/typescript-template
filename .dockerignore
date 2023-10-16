@@ -1,0 +1,8 @@
+# Copy files to docker container but ignore the following
+.*
+*.md
+src/
+DOCKERFILE
+# Following should not be on host but ignore anyway in case they exist for local debug
+node_modules/
+dist/
