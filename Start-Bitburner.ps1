@@ -13,7 +13,12 @@ if ((Get-Process -Name "Docker Desktop" -ErrorAction SilentlyContinue) -eq $null
 
 Write-Output "Starting bitburner-filesync container..."
 # Assumes you have already built the docker image named bitburner-typescript
-docker run --rm -d -v "$($pwd)/src:/app/src" -p 12525:12525 --name bitburner-filesync bitburner-typescript
+# bind mount the src directory and NetscriptDefinitions.d.ts to sync the intellisense definitions from the connected game back to the host text editor
+$definitionFileName = "NetscriptDefinitions.d.ts"
+If (!(Test-Path "$($pwd)/$($definitionFileName)")) {
+    New-Item -Path $pwd -Name $definitionFileName -ItemType File -Force -Value "This definition file will be updated and overwritten on successful file sync." | Out-Null
+}
+docker run --rm -d -v "$($pwd)/src:/app/src" -v "$($pwd)/NetscriptDefinitions.d.ts:/app/NetscriptDefinitions.d.ts" -p 12525:12525 --name bitburner-filesync bitburner-typescript
 
 # If VS Code not running start VS Code
 # Assumes you have VS Code installed and a workspace file named bitburner-scripts.code-workspace
