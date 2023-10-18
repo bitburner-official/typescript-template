@@ -3,6 +3,8 @@ This guide is mostly focused on Windows users (Mac instructions are given at som
 If you're a Linux/Mac/Other user, there's an expectancy that you know your system and it's peculiarities compared to Windows.
 If you need help with your particular system, feel free to ask for help in the Official Bitburner Discord.
 
+Alternatively if you are familiar with docker, see [Docker install guide](DockerGuide.md) (optional) that installs nodejs and the Remote File API in an isolated container.
+
 ### 1. Backup your savegame (just in case) 
 - Augmentations -> Backup save
 
