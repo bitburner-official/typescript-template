@@ -5,7 +5,7 @@ If you're a Linux/Mac/Other user, there's an expectancy that you know your syste
 
 > This guide assumes you have a basic understanding of docker concepts and will be using Docker Desktop for Windows. If you want to use an alternative container management solution e.g. podman, there's an expectancy that you know your system and it's peculiarities compared to Docker Desktop.
 
-If you are not familiar with docker, the [Beginners Guide](BeginnersGuide.md) manual setup is available.
+**Use of docker is completely optional**. If you are not familiar with docker, or do not intend to run the file sync in a container, the [Beginners Guide](BeginnersGuide.md) manual setup is available.
 
 If you need help with your particular system, feel free to ask for help in the Official Bitburner Discord.
 
@@ -13,7 +13,7 @@ If you need help with your particular system, feel free to ask for help in the O
 
 Docker is a virtualization layer that allows you to separate applications from underlying local host infrastructure, making application environments consistent and easier to manage. 
 
-You may want to use an isolated docker container for the Remote API instead of installing nodejs with the Remote API dependencies locally on your computer.
+You may want to use an isolated docker container for the Remote API instead of installing nodejs with the Remote API dependencies locally on your computer. 
 
 > This guide assumes you are familiar with docker fundamentals. You may need to modify these steps if using an alternative container management solution or if you want to include different docker options.
 
