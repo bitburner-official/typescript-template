@@ -32,19 +32,25 @@ You may want to use an isolated docker container for the Remote API instead of i
 - If you are familiar with Git, clone the repository using the appropriate remote URL.
 - If you're unfamiliar with Git and have no intention to use it, download the ZIP and extract it somewhere on your computer.
 
-### 4. Build the bitburner-typescript docker image
+### 4. Create `NetscriptDefinitions.d.ts` file for intellisense auto-complete
+
+- The definitions file is used for 'intellisense' or auto-complete in text editors.
+- Create a file named `NetscriptDefinitions.d.ts` in your workspace. This is case sensitive. The contents of the file will be overwritten when you connect to bitburner so it doesn't matter what the file is, as long as it exists. The file should be in your project directory (same location as Dockerfile). 
+- If the file does not exist, the volume bind mount in the docker command will create a directory named `NetscriptDefinitions.d.ts` instead of a file, which is not what we want!
+
+	
+### 5. Run the bitburner-filesync docker container 
 - Start a command prompt / PowerShell / terminal session in your project workspace and enter:
 
    ```docker build -t bitburner-typescript .```
-	
-### 5. Run the bitburner-filesync docker container 
+
 - Enter the following command to run the bitburner-filesync container using the bitburner-typescript image created above:
 
-  ```docker run --rm -d -v "$($pwd)/src:/app/src" -p 12525:12525 --name bitburner-filesync bitburner-typescript```
+  ```docker run --rm -d -v "$($pwd)/src:/app/src" -v "$($pwd)/NetscriptDefinitions.d.ts:/app/NetscriptDefinitions.d.ts" -p 12525:12525 --name bitburner-filesync bitburner-typescript```
 
 > NOTE: In a PowerShell terminal the `$($pwd)` resolves to the current directory but you can modify the command with full file path to the src directory if required.
 
-> NOTE: If you view the container logs they may show "`error TS2307: Cannot find module '@ns' or its corresponding type declarations`". This is fine, the missing type declaration `NetscriptDefinitions.d.ts` will be downloaded from the game once successfully connected to bitburner.
+> NOTE: If you view the container logs they may show "`error TS2307: Cannot find module '@ns' or its corresponding type declarations`". This is fine, the `NetscriptDefinitions.d.ts` will be downloaded from the game once successfully connected to bitburner.
 
 ### 6. Start Bitburner and configure the remote API connection
 - Bitburner > Options sidebar > Remote API > type in the port `12525` and click connect. The icon should turn green and say it's online.
