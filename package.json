@@ -1,6 +1,6 @@
 {
-  "name": "bitburner-typescript-template",
-  "version": "2.0.0",
+  "name": "bitburner-ts-fileshare",
+  "version": "1.0.0",
   "scripts": {
     "watch:transpile": "tsc -w --preserveWatchOutput",
     "watch:local": "node build/watch.js",
@@ -9,7 +9,8 @@
     "watch:all": "concurrently npm:watch:transpile npm:watch:local npm:watch:remote",
     "watch": "npm run watch:init && npm run watch:all"
   },
-  "author": "hydroflame, Hoekstraa, based on work by SlyCedix",
+  "forkedFrom": "https://github.com/bitburner-official/typescript-template",
+  "author": "Logan",
   "devDependencies": {
     "@types/react": "^18.2.18",
     "@types/react-dom": "^18.2.7",
