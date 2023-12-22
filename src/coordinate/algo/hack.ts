@@ -40,10 +40,6 @@ export function allocateHack(ns: NS, allocator: Allocator, targets: Server[]): A
     const allocations: Allocation[] = []
 
     const toHack = hackCandidates(ns, targets)
-    for (const hack of toHack) {
-        ns.print(`HACK: ${hack.hostname}: earning=${hack.earnings} time=${hack.time/60.0/1000.0}min threads=${hack.threads} chance=${hack.chance}`)
-    }
-
     for (let idx = 0; idx < toHack.length; idx++) {
         const hack = toHack[idx]
         const allocated = allocator.allocate(WorkType.hacking, hack.threads, hack.hostname)

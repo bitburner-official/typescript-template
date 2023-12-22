@@ -5,7 +5,7 @@ import { Grow } from 'coordinate/types'
 export function growCandidates(ns: NS, targets: Server[]): Grow[] {
     const eligable = targets.filter((target) => (target.moneyMax ?? 0) > 0 &&
     (target.moneyAvailable ?? 0) < (target.moneyMax ?? 0) &&
-        ns.getServerSecurityLevel(target.hostname) < ns.getServerMinSecurityLevel(target.hostname) * 1.05 &&
+        ns.getServerSecurityLevel(target.hostname) < ns.getServerMinSecurityLevel(target.hostname) * 1.0001 &&
         ns.getServerMaxMoney(target.hostname) > 0 && 
         (target.moneyAvailable ?? 0) / (target.moneyMax ?? 0) < 0.9)
 
@@ -35,10 +35,6 @@ export function allocateGrowing(ns: NS, allocator: Allocator, targets: Server[])
     const allocations: Allocation[] = []
 
     const growable = growCandidates(ns, targets)
-    for (const grow of growable) {
-        ns.print(`GROW: ${grow.hostname}: time=${grow.time/60.0/1000.0}min threads=${grow.threads} security=${grow.security} earning=${grow.earning}`)
-    }
-
     for (let idx = 0; idx < growable.length; idx++) {
         const grow = growable[idx]
         const allocated = allocator.allocate(WorkType.growing, grow.threads, grow.hostname)

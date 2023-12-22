@@ -7,18 +7,14 @@ export async function main(ns : NS) : Promise<void> {
     const player = ns.getPlayer()
     const server = ns.getServer(hostname)
 
-    ns.tprint({
+    ns.tprint(JSON.stringify({
         hostname: hostname,
-        moneyAvailable: server.moneyAvailable,
-        moneyMax: server.moneyMax,
-        serverGrowth: server.serverGrowth,
         minSecurityLevel: ns.getServerMinSecurityLevel(hostname),
         securityLevel: ns.getServerSecurityLevel(hostname),
-        hackChance: ns.formulas.hacking.hackChance(server, player),
-        hackPercent: ns.formulas.hacking.hackPercent(server, player),
-        hackTime: ns.formulas.hacking.hackTime(server, player),
-        weakenTime: ns.formulas.hacking.weakenTime(server, player)
-    })
+        weakenPerThread: ns.weakenAnalyze(1),
+        hackSecurity: ns.hackAnalyzeSecurity(1),
+        growSecurity: ns.growthAnalyzeSecurity(1),
+    }, undefined, 2))
 
     const maxThreads = ns.formulas.hacking.growThreads(server, player, server.moneyMax ?? 0)
 

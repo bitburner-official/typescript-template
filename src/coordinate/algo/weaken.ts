@@ -35,10 +35,6 @@ export function allocateWeaken(ns: NS, allocator: Allocator, targets: Server[]):
     const allocations: Allocation[] = []
 
     const inOrder = weakenCandidate(ns, targets)
-    for (const weak of inOrder) {
-        ns.print(`WEAK: ${weak.hostname}: time=${weak.time/60.0/1000.0}min threads=${weak.threads} security=${weak.security}`)
-    }
-
     for (let idx = 0; idx < inOrder.length; idx++) {
         const weaken = inOrder[idx]
         const allocated = allocator.allocate(WorkType.weaking, weaken.threads, weaken.hostname)

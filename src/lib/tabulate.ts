@@ -1,5 +1,11 @@
 import { NS } from '@ns'
 
+export async function ttabulate( ns: NS, 
+    objects: Record<string, unknown>[], 
+    keys = Object.keys(objects[0]||{})): Promise<void> {
+        return tabulate(ns, objects, keys, true)
+}
+
 export async function tabulate( ns: NS, 
                                 objects: Record<string, unknown>[], 
                                 keys = Object.keys(objects[0]||{}),

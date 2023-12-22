@@ -1,5 +1,5 @@
 
-export interface Grow {
+export type Grow = {
     hostname: string;
     threads: number;
     time: number;
@@ -7,7 +7,7 @@ export interface Grow {
     security: number
 }
 
-export interface Hack {
+export type Hack = {
     hostname: string;
     earnings: number;
     threads: number;
@@ -16,7 +16,7 @@ export interface Hack {
     security: number[];
 }
 
-export interface Weaken {
+export type Weaken = {
     hostname: string;
     amount: number;
     threads: number;

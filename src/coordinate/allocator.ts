@@ -8,7 +8,7 @@ export enum WorkType {
     growing 
 }
 
-export interface Allocation {
+export type Allocation = {
     worker: string;
     target: string;
     script: string;
