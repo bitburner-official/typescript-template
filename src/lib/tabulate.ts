@@ -9,7 +9,7 @@ export async function tabulate( ns: NS,
 	// Compute the required width of all columns
 	for (const key of keys) {
 		const lengths = objects.map(v => String(v[key]).length);
-		columns[key] = Math.max(key.length, ...lengths);
+		columns[key] = Math.max(key.length, ...lengths) + 1;
 	}
 
 	let table = "\n";
