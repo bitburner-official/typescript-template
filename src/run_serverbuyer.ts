@@ -8,6 +8,7 @@ export async function main(ns: NS): Promise<void> {
     const baseName = "π-"
     let multi = 2 // assumes you need up to 8gb for your hack and distro script. you may be able to lower this accordingly.
     const maxRam = ns.getPurchasedServerMaxRam()
+    const maxServers = ns.getPurchasedServerLimit()
 
     const servers = ns.getPurchasedServers()
     if (servers.length > 0) {
@@ -22,7 +23,7 @@ export async function main(ns: NS): Promise<void> {
         queue.push(servers[i])
     }
 
-    ns.tprintf("Starting multiplier: %d", multi)
+    ns.tprintf("Starting with: MaxRAM=%d MaxServers=%d Multiplier=%d", maxRam, maxServers, multi)
 
     const running = true
     let nameCounter = 1
@@ -37,7 +38,7 @@ export async function main(ns: NS): Promise<void> {
         const ram = Math.pow(2, multi)
         const cost = ns.getPurchasedServerCost(ram)
 
-        if (count >= ns.getPurchasedServerLimit() && cash >= cost) {
+        if (count >= maxServers && cash >= cost) {
             const peek = queue.peek()
             if (!peek) {
                 continue
@@ -57,7 +58,7 @@ export async function main(ns: NS): Promise<void> {
                 }
             }
         }
-        else if (count < ns.getPurchasedServerLimit() && cash >= cost) {
+        else if (count < maxServers && cash >= cost) {
             const name = baseName + pad(nameCounter, 8)
             nameCounter++
             const newBox = ns.purchaseServer(name, ram)
