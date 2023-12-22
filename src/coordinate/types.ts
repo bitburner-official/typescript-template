@@ -10,6 +10,7 @@ export type Grow = {
 export type Hack = {
     hostname: string;
     earnings: number;
+    money: number;
     threads: number;
     chance: number;
     time: number;

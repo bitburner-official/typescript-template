@@ -5,6 +5,7 @@ import { killProcess, makeid } from '/lib/process.js'
 import { allocateHack } from 'coordinate/algo/hack'
 import { allocateWeaken } from 'coordinate/algo/weaken'
 import { allocateGrowing } from 'coordinate/algo/grow'
+import { tabulate } from '/lib/tabulate'
 
 export class Coordinator {
 
@@ -54,11 +55,11 @@ export class Coordinator {
 
         const inProgress = new Set<string>()
 
-        // servers.forEach((srv) =>
-        //     ns.ps(srv.hostname).forEach((pi) => 
-        //         inProgress.add(pi.args[0].toString())
-        //     )
-        // )
+        servers.forEach((srv) =>
+            ns.ps(srv.hostname).forEach((pi) => 
+                inProgress.add(pi.args[0].toString())
+            )
+        )
 
         const targets = servers.filter((srv) => 
             srv.hasAdminRights && 
@@ -71,6 +72,11 @@ export class Coordinator {
         }
         const allocations: Allocation[] = []
 
+        allocateWeaken(ns, allocator, targets)
+            .forEach((elem) => {
+                allocations.push(elem)
+            } 
+        )
         allocateHack(ns, allocator, targets)
             .forEach((elem) => {
                 allocations.push(elem)
@@ -79,11 +85,6 @@ export class Coordinator {
             .forEach((elem) => {
                 allocations.push(elem)
             })
-        allocateWeaken(ns, allocator, targets)
-            .forEach((elem) => {
-                allocations.push(elem)
-            } 
-        )
 
         const byWorker: Map<string, Allocation[]> = new Map()        
 

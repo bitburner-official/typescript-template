@@ -26,6 +26,7 @@ export function hackCandidates(ns: NS, targets: Server[]): Hack[] {
         return { 
             hostname: target.hostname,
             earnings: earnings,
+            money: target.moneyAvailable ?? 0,
             threads: Math.floor(hackThreads),
             chance: hackChance,
             time: hackTime,
