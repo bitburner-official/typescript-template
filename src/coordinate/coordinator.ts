@@ -5,7 +5,6 @@ import { killProcess, makeid } from '/lib/process.js'
 import { allocateHack } from 'coordinate/algo/hack'
 import { allocateWeaken } from 'coordinate/algo/weaken'
 import { allocateGrowing } from 'coordinate/algo/grow'
-import { tabulate } from '/lib/tabulate'
 
 export class Coordinator {
 
