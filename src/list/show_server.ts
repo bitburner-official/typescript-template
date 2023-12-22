@@ -1,4 +1,5 @@
 import { NS } from '@ns'
+import { tabulate } from '/lib/tabulate'
 
 export async function main(ns : NS) : Promise<void> {
     const hostname = ns.args[0] as string
@@ -21,12 +22,23 @@ export async function main(ns : NS) : Promise<void> {
 
     const maxThreads = ns.formulas.hacking.growThreads(server, player, server.moneyMax ?? 0)
 
-    for (let i = 0; i < maxThreads; i+=maxThreads/50+1) {
-        ns.tprintf("%d\t%f\t%f\t%f", 
-            i, 
-            ns.formulas.hacking.growPercent(server, i, player),
-            ns.formulas.hacking.growTime(server, player),
-            ns.formulas.hacking.growThreads(server, player, server.moneyMax ?? 0)
-            )
+    type ThreadLine = {
+        id: number,
+        growPercent: number;
+        growTime: number;
+        growThreads: number;
     }
+
+    const threads: ThreadLine[]  = []
+
+    for (let i = 0; i < maxThreads; i+=maxThreads/50+1) {
+        threads.push({
+            id: i,
+            growPercent: ns.formulas.hacking.growPercent(server, i, player),
+            growTime: ns.formulas.hacking.growTime(server, player),
+            growThreads: ns.formulas.hacking.growThreads(server, player, server.moneyMax ?? 0)
+        })
+    }
+
+    tabulate(ns, threads, undefined, true)
 }

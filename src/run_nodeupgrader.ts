@@ -1,7 +1,15 @@
-import { NS } from '@ns'
+import { NS, NodeStats } from '@ns'
+import { tabulate } from './lib/tabulate';
+
+const targetNodes = 30
+const targetCores = 16
+const targetRam = 64
+const targetLevel = 200    
+
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function main(ns : NS) : Promise<void> {
+
     const myMoney = (): number => {
         return ns.getPlayer().money
     }
@@ -11,55 +19,84 @@ export async function main(ns : NS) : Promise<void> {
     
     const hacknet = ns.hacknet
 
-    const nodes = 30
-    const cores = 16
-    const ram = 64
-    const level = 200    
     
     // eslint-disable-next-line no-constant-condition
     while(true) {
-        while(hacknet.numNodes() < nodes) {
+        while(hacknet.numNodes() < targetNodes) {
             const cost = hacknet.getPurchaseNodeCost()
             if (myMoney() < cost) {
                 break
             }
-            const res = hacknet.purchaseNode()
-            ns.print("Purchased hacknet Node with index " + res)
         }
         
         for (let i = 0; i < hacknet.numNodes(); i++) {
-            if (hacknet.getNodeStats(i).level <= level) {
+            if (hacknet.getNodeStats(i).level <= targetLevel) {
                 const cost = hacknet.getLevelUpgradeCost(i, 10)
                 if (myMoney() < cost) {
                     break
                 }
                 hacknet.upgradeLevel(i, 10)
-                ns.print("Upgraded hacknet Node level with index " + i)
             }
         }
         
         for (let i = 0; i < hacknet.numNodes(); i++) {
-            while (hacknet.getNodeStats(i).ram < ram) {
+            while (hacknet.getNodeStats(i).ram < targetRam) {
                 const cost = hacknet.getRamUpgradeCost(i, 2)
                 if (myMoney() < cost) {
                     break
                 }
                 hacknet.upgradeRam(i, 2)
-                ns.print("Upgraded hacknet Node ram with index " + i)
             }
         }
         
         for (let i = 0; i < hacknet.numNodes(); i++) {
-            while (hacknet.getNodeStats(i).cores < cores) {
+            while (hacknet.getNodeStats(i).cores < targetCores) {
                 const cost = hacknet.getCoreUpgradeCost(i, 1)
                 if (myMoney() < cost) {
                     break
                 }
                 hacknet.upgradeCore(i, 1)
-                ns.print("Upgraded hacknet Node cores with index " + i)
             }
         }
-        await ns.sleep(180000)
+        printDashboard(ns)
+        await ns.sleep(18000)
     }
 
+}
+
+async function printDashboard(ns: NS): Promise<void> {
+    ns.clearLog();
+    
+    const nodes: NodeStats[]  = []
+    for (let i = 0; i < ns.hacknet.numNodes(); i++) {
+        nodes.push(ns.hacknet.getNodeStats(i))
+    }
+    const maxNodes = ns.hacknet.maxNumNodes() < targetNodes ? targetNodes : Infinity
+    ns.print(`Nodes: ${nodes.length} of ${maxNodes}`);
+    ns.print(`Total Production: ${nodes.length === 0 ? "$0 /s" : ns.formatNumber(nodes.map((v, i) => ns.hacknet.getNodeStats(i).production).reduce((a, b) => a + b))} /s`)
+    ns.print(`Total Produced: ${nodes.length === 0 ? "$0" : ns.formatNumber(nodes.map((v, i) => ns.hacknet.getNodeStats(i).totalProduction).reduce((a, b) => a + b))}`)
+    
+    type NodeInfo = {
+        "Node": string
+         "Produced": string, 
+         "Uptime": string, 
+         "Production": string, 
+         "Lv": number, 
+         "RAM": string, 
+         "Cores": number
+    }
+
+    const rows: NodeInfo[] = nodes.map( (nodeState) => 
+        ({
+            Node: nodeState.name,
+            Produced: ns.formatNumber(nodeState.totalProduction),
+            Uptime: ns.tFormat(nodeState.timeOnline*1000),
+            Production: `${ns.formatNumber(nodeState.production)} / s`,
+            Lv: nodeState.level,
+            RAM: ns.formatRam(nodeState.ram),
+            Cores: nodeState.cores,
+        } as NodeInfo)
+    )
+
+    tabulate(ns, rows, undefined, false)
 }
