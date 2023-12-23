@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ano-unused-vars */
 import { NS } from '@ns'
 import { tabulate } from '/lib/tabulate'
 
