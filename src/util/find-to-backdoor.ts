@@ -1,5 +1,5 @@
 import { NS } from '@ns'
-import { Scanner, defaultScannerConfig } from '/lib/scanner'
+import { Scanner } from '/lib/scanner'
 import { ttabulate } from '/lib/tabulate'
 
 export async function main(ns : NS) : Promise<void> {
