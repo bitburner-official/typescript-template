@@ -1,6 +1,6 @@
 import { NS, Server } from '@ns'
-import { Allocator, Allocation, WorkType } from 'coordinate/allocator.js'
-import { Hack } from 'coordinate/types'
+import { Allocator, Allocation, WorkType } from '/v1/coordinate/allocator.js'
+import { Hack } from '/v1/coordinate/types'
 
 export function hackCandidates(ns: NS, targets: Server[]): Hack[] {
     const eligable = targets.filter((target) => {

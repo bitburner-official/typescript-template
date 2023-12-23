@@ -1,4 +1,4 @@
-import { Capacity } from 'coordinate/capacity' 
+import { Capacity } from '/v1/coordinate/capacity' 
 import { NS, Server } from '/../NetscriptDefinitions.js'
 
 export enum WorkType {

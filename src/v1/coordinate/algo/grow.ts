@@ -1,6 +1,6 @@
 import { NS, Server } from '@ns'
-import { Allocator, Allocation, WorkType } from 'coordinate/allocator.js'
-import { Grow } from 'coordinate/types'
+import { Allocator, Allocation, WorkType } from '/v1/coordinate/allocator.js'
+import { Grow } from '/v1/coordinate/types'
 
 export function growCandidates(ns: NS, targets: Server[]): Grow[] {
     const eligable = targets.filter((target) => (target.moneyMax ?? 0) > 0 &&

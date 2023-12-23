@@ -1,10 +1,10 @@
 import { NS } from '@ns'
 import { Scanner } from 'lib/scanner.js'
-import { Allocator, Allocation} from 'coordinate/allocator.js'
+import { Allocator, Allocation} from '/v1/coordinate/allocator.js'
 import { killProcess, makeid } from '/lib/process.js'
-import { allocateHack } from 'coordinate/algo/hack'
-import { allocateWeaken } from 'coordinate/algo/weaken'
-import { allocateGrowing } from 'coordinate/algo/grow'
+import { allocateHack } from '/v1/coordinate/algo/hack'
+import { allocateWeaken } from '/v1/coordinate/algo/weaken'
+import { allocateGrowing } from '/v1/coordinate/algo/grow'
 
 export class Coordinator {
 

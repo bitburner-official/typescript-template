@@ -1,5 +1,5 @@
 import { NS } from '@ns'
-import { Coordinator } from 'coordinate/coordinator'
+import { Coordinator } from '/v1/coordinate/coordinator'
 
 export async function main(ns : NS) : Promise<void> {
     const coordinator = new Coordinator()

@@ -1,9 +1,9 @@
 import { NS } from '@ns'
-import { Scanner } from 'lib/scanner.js'
-import { hackCandidates } from 'coordinate/algo/hack'
-import { Grow, Hack, Weaken } from 'coordinate/types'
-import { weakenCandidate } from '/coordinate/algo/weaken'
-import { growCandidates } from '/coordinate/algo/grow'
+import { Scanner } from '/lib/scanner.js'
+import { hackCandidates } from '/v1/coordinate/algo/hack'
+import { Grow, Hack, Weaken } from '/v1/coordinate/types'
+import { weakenCandidate } from '/v1/coordinate/algo/weaken'
+import { growCandidates } from '/v1/coordinate/algo/grow'
 import { ttabulate } from '/lib/tabulate'
 
 export async function main(ns : NS) : Promise<void> {

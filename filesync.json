@@ -1,6 +1,6 @@
 {
   "allowedFiletypes": [".js", ".script", ".txt"],
-  "allowDeletingFiles": false,
+  "allowDeletingFiles": true,
   "port": 12525,
   "scriptsFolder": "dist",
   "quiet": false,

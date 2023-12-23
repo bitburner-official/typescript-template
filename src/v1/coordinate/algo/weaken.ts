@@ -1,6 +1,6 @@
 import { NS, Server } from '@ns'
-import { Allocator, Allocation, WorkType } from 'coordinate/allocator.js'
-import { Weaken } from 'coordinate/types'
+import { Allocator, Allocation, WorkType } from '/v1/coordinate/allocator.js'
+import { Weaken } from '/v1/coordinate/types'
 
 export function weakenCandidate(ns: NS, targets: Server[]): Weaken[] {
     const eligable = targets.filter((target) => {
