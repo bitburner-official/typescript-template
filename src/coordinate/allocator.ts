@@ -19,25 +19,33 @@ const workerGrow = "/worker/grow_once.js"
 const workerHack = "/worker/hack_once.js"
 const workerWeaken = "/worker/weaken_once.js"
 
+export type WorkTypeShare = Map<WorkType, number>
 
 export class Allocator {
 
-    ns: NS
-    capacity: Capacity
+    private capacity: Capacity
+    private maxWorkTypeThreads: WorkTypeShare = new Map()
 
-    constructor(ns: NS, workers: Server[]) {
-        this.ns = ns
+    constructor(ns: NS, workers: Server[], maxWorkTypeShare: WorkTypeShare | undefined ) {
         this.capacity = new Capacity(ns, workers)
 
+        if (maxWorkTypeShare !== undefined) {
+            maxWorkTypeShare.forEach((share, wt) => 
+                this.maxWorkTypeThreads.set(wt, Math.ceil(share * this.capacity.totalThreads))
+            )
+        }
+        this.report(ns)
     }
 
-    freeCapacity(): number {
-        let reminder = 0
+    report(ns: NS) {
+        ns.print(`Allocator: totalThreads=${this.capacity.totalThreads}}`)
+        if (this.maxWorkTypeThreads !== undefined) {
+            ns.print(`Allocator: maxWorkTypeThreads=${JSON.stringify(Array.from(this.maxWorkTypeThreads.entries()))}`)
+        }
+    }
 
-        this.capacity.workers.forEach(val => {
-            reminder += val
-        })
-        return reminder
+    hasCapacity(): boolean {
+        return this.capacity.totalThreads > 0
     }
 
     allocate(type: WorkType, maxThreads: number, target: string): Allocation[] {
@@ -48,7 +56,6 @@ export class Allocator {
         if (!toAllocate) {
             return allocations
         }
-        this.ns.printf("Allocating %s for %s: maxThreads=%d => %d", this.scriptName(type), target, maxThreads, toAllocate)
         
         const workerEntries =  Array.from(this.capacity.workers.entries())
         workerEntries.sort((a, b) => a[1] - b[1])
@@ -68,14 +75,12 @@ export class Allocator {
                 this.capacity.workers.delete(hostname)
             }
             toAllocate -= allocated
-            this.ns.printf("Allocating threads for %s on %s: %d, capacity:%s", 
-                target, hostname, allocated, JSON.stringify(this.capacity))
             this.allocateThreads(type, allocated)
 
             allocations.push({
                 worker: hostname,
                 target: target,
-                script: this.scriptName(type),
+                script: scriptName(type),
                 threads: allocated
             } as Allocation)
 
@@ -84,21 +89,38 @@ export class Allocator {
     }
 
     private availableThreads(type: WorkType, maxThreads: number): number {
-        return Math.floor(Math.min(this.capacity.totalThreads, maxThreads))
+        const maxAvailable = 
+            Math.min(
+                this.maxWorkTypeThreads.get(type) ?? this.capacity.totalThreads,
+                this.capacity.totalThreads)
+        return Math.floor(Math.min(maxAvailable, maxThreads))
     }
 
     private allocateThreads(type: WorkType, threads: number): void {
         this.capacity.totalThreads -= threads
-    }
-
-    private scriptName(type: WorkType): string {
-        switch(type) {
-            case WorkType.hacking: return workerHack; break
-            case WorkType.growing: return workerGrow; break
-            case WorkType.weaking: return workerWeaken; break
-            default: return ""
+        const currentValue = this.maxWorkTypeThreads.get(type)
+        if (currentValue !== undefined) {
+            this.maxWorkTypeThreads.set(type, currentValue - threads)
         }
     }
 
 }
 
+export function scriptName(type: WorkType): string {
+    switch(type) {
+        case WorkType.hacking: return workerHack; break
+        case WorkType.growing: return workerGrow; break
+        case WorkType.weaking: return workerWeaken; break
+        default: return ""
+    }
+}
+
+
+export function scriptType(script: string): WorkType {
+    switch(script) {
+        case workerHack: return WorkType.hacking; break
+        case workerGrow: return WorkType.growing; break
+        case workerWeaken: return WorkType.weaking; break
+        default: return WorkType.any
+    }
+}

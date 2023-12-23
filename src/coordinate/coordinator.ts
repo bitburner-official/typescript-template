@@ -5,6 +5,7 @@ import { killProcess, makeid } from '/lib/process.js'
 import { allocateHack } from 'coordinate/algo/hack'
 import { allocateWeaken } from 'coordinate/algo/weaken'
 import { allocateGrowing } from 'coordinate/algo/grow'
+import { WorkType } from 'coordinate/allocator';
 
 export class Coordinator {
 
@@ -20,11 +21,6 @@ export class Coordinator {
             for (let i = 0; i < toKill.length; i++) {
                 await killProcess(ns, worker, toKill[i])
             }
-
-            ns.print({
-                allocations: scripts,
-                ps: toKill
-            })
         }
 
 
@@ -34,14 +30,14 @@ export class Coordinator {
             let result = "started"
             if (!ns.exec(g.script, g.worker, g.threads, g.target, allocID)) {
                 result = "failed"
+                ns.print({
+                    "action": result,
+                    "worker": g.worker,
+                    "target": g.target,
+                    "started": g.script,
+                    "threads": g.threads
+                })    
             }
-            ns.print({
-                "action": result,
-                "worker": g.worker,
-                "target": g.target,
-                "started": g.script,
-                "threads": g.threads
-            })    
         }
     }
 
@@ -65,25 +61,36 @@ export class Coordinator {
                 !inProgress.has(srv.hostname)
         )
 
-        const allocator = new Allocator(ns, servers)
-        if (allocator.capacity.totalThreads < 1) {
+        const allocationShares = new Map([
+            [WorkType.weaking, 0.8],
+            [WorkType.hacking, 0.1],
+            [WorkType.growing, 0.1]
+        ])
+
+        const allocator = new Allocator(ns, servers, allocationShares)
+
+        if (!allocator.hasCapacity()) {
             return
         }
         const allocations: Allocation[] = []
 
-        allocateHack(ns, allocator, targets)
-            .forEach((elem) => {
-                allocations.push(elem)
-            })
-        allocateGrowing(ns, allocator, targets)
-            .forEach((elem) => {
-                allocations.push(elem)
-            })
         allocateWeaken(ns, allocator, targets)
             .forEach((elem) => {
                 allocations.push(elem)
             } 
         )
+        allocateHack(ns, allocator, targets)
+            .forEach((elem) => {
+                allocations.push(elem)
+            }
+        )
+        allocateGrowing(ns, allocator, targets)
+            .forEach((elem) => {
+                allocations.push(elem)
+            }
+        )
+
+        allocator.report(ns)
 
         const byWorker: Map<string, Allocation[]> = new Map()        
 

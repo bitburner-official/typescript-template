@@ -59,7 +59,7 @@ export async function main(ns : NS) : Promise<void> {
             }
         }
         printDashboard(ns)
-        await ns.sleep(18000)
+        await ns.sleep(5000)
     }
 
 }

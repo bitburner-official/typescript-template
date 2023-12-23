@@ -1,6 +1,7 @@
 import { NS } from '@ns'
 import { Scanner } from 'lib/scanner.js'
 import { tabulate } from '/lib/tabulate';
+import { scriptType } from './coordinate/allocator';
 
 export async function main(ns : NS) : Promise<void> {
 
@@ -26,7 +27,8 @@ export async function main(ns : NS) : Promise<void> {
                 Threads: 0
             }
             ns.ps(srv.hostname).forEach((pi) =>  {
-                workerState.Targets.push(pi.args[0].toString())
+                const target=`${scriptType("/" + pi.filename)}:${pi.args[0].toString()}`
+                workerState.Targets.push(target)
                 workerState.Threads += pi.threads
             })
             inProgress[srv.hostname] = workerState
