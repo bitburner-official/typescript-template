@@ -26,7 +26,7 @@ export class Allocator {
     private capacity: Capacity
     private maxWorkTypeThreads: WorkTypeShare = new Map()
 
-    constructor(ns: NS, workers: Server[], maxWorkTypeShare: WorkTypeShare | undefined ) {
+    constructor(ns: NS, workers: Server[], maxWorkTypeShare: WorkTypeShare | undefined = undefined) {
         this.capacity = new Capacity(ns, workers)
 
         if (maxWorkTypeShare !== undefined) {

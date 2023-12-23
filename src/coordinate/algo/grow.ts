@@ -5,7 +5,7 @@ import { Grow } from 'coordinate/types'
 export function growCandidates(ns: NS, targets: Server[]): Grow[] {
     const eligable = targets.filter((target) => (target.moneyMax ?? 0) > 0 &&
     (target.moneyAvailable ?? 0) < (target.moneyMax ?? 0) &&
-        ns.getServerSecurityLevel(target.hostname) < ns.getServerMinSecurityLevel(target.hostname) * 1.0001 &&
+        ns.getServerSecurityLevel(target.hostname) <= ns.getServerMinSecurityLevel(target.hostname) * 1.1 &&
         ns.getServerMaxMoney(target.hostname) > 0 && 
         (target.moneyAvailable ?? 0) / (target.moneyMax ?? 0) < 0.9)
 
@@ -22,6 +22,8 @@ export function growCandidates(ns: NS, targets: Server[]): Grow[] {
             time: growTime,
             threads: Math.floor(threads),
             earning: maxMoney - currentMoney,
+            money: target.moneyAvailable ?? 0,
+            moneyMax: target.moneyMax ?? 0,
             security: ns.growthAnalyzeSecurity(threads, target.hostname)
         } as Grow
     }).filter((elem) => elem.threads > 0)

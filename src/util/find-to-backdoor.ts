@@ -10,13 +10,11 @@ export async function main(ns : NS) : Promise<void> {
     }
 
     const servers: ServerRow[] = Array.from(new Scanner()
-        .scan(ns, {
-            ...defaultScannerConfig,
-            directConnected: true
-        })
+        .scan(ns)
         .hosts
-        .filter((srv) => !srv.backdoor))
         .filter((srv) => !srv.owned)
+        .filter((srv) => srv.hacked)
+        .filter((srv) => !srv.backdoor))
         .map((srv) => {
             const connection = srv.path.map((s) => `connect ${s};`).join(" ")
             return {

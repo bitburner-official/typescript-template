@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ano-unused-vars */
 import { NS } from '@ns'
 import { tabulate } from '/lib/tabulate'
 
@@ -12,6 +11,8 @@ export async function main(ns : NS) : Promise<void> {
         hostname: hostname,
         minSecurityLevel: ns.getServerMinSecurityLevel(hostname),
         securityLevel: ns.getServerSecurityLevel(hostname),
+        money: ns.getServerMoneyAvailable(hostname),
+        moneyMax: ns.getServerMaxMoney(hostname),
         weakenPerThread: ns.weakenAnalyze(1),
         hackSecurity: ns.hackAnalyzeSecurity(1),
         growSecurity: ns.growthAnalyzeSecurity(1),

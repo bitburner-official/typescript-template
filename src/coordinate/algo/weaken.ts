@@ -4,7 +4,8 @@ import { Weaken } from 'coordinate/types'
 
 export function weakenCandidate(ns: NS, targets: Server[]): Weaken[] {
     const eligable = targets.filter((target) => {
-        return (target.moneyMax ?? 0) > 0
+        return (target.moneyMax ?? 0) > 0 && 
+            ns.getServerSecurityLevel(target.hostname) > ns.getServerMinSecurityLevel(target.hostname) * 1.1
     })
 
     const weakenDecrese = ns.weakenAnalyze(1)

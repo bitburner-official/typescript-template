@@ -61,24 +61,13 @@ export class Coordinator {
                 !inProgress.has(srv.hostname)
         )
 
-        const allocationShares = new Map([
-            [WorkType.weaking, 0.8],
-            [WorkType.hacking, 0.1],
-            [WorkType.growing, 0.1]
-        ])
-
-        const allocator = new Allocator(ns, servers, allocationShares)
+        const allocator = new Allocator(ns, servers)
 
         if (!allocator.hasCapacity()) {
             return
         }
         const allocations: Allocation[] = []
 
-        allocateWeaken(ns, allocator, targets)
-            .forEach((elem) => {
-                allocations.push(elem)
-            } 
-        )
         allocateHack(ns, allocator, targets)
             .forEach((elem) => {
                 allocations.push(elem)
@@ -88,6 +77,11 @@ export class Coordinator {
             .forEach((elem) => {
                 allocations.push(elem)
             }
+        )
+        allocateWeaken(ns, allocator, targets)
+            .forEach((elem) => {
+                allocations.push(elem)
+            } 
         )
 
         allocator.report(ns)

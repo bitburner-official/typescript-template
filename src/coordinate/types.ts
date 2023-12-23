@@ -4,6 +4,8 @@ export type Grow = {
     threads: number;
     time: number;
     earning: number;
+    money: number;
+    moneyMax: number;
     security: number
 }
 
@@ -11,6 +13,7 @@ export type Hack = {
     hostname: string;
     earnings: number;
     money: number;
+    moneyMax: number;
     threads: number;
     chance: number;
     time: number;

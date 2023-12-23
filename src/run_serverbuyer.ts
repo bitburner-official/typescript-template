@@ -4,6 +4,7 @@ import { Queue } from "./lib/queue"
 export async function main(ns: NS): Promise<void> {
     ns.disableLog("getServerMoneyAvailable")
     ns.disableLog("sleep")
+    ns.disableLog("asleep")
 
     const baseName = "π-"
     let multi = 2 // assumes you need up to 8gb for your hack and distro script. you may be able to lower this accordingly.
@@ -23,13 +24,13 @@ export async function main(ns: NS): Promise<void> {
         queue.push(servers[i])
     }
 
-    ns.tprintf("Starting with: MaxRAM=%d MaxServers=%d Multiplier=%d", maxRam, maxServers, multi)
+    ns.printf("Starting with: MaxRAM=%d MaxServers=%d Multiplier=%d", maxRam, maxServers, multi)
 
     const running = true
     let nameCounter = 1
     while (running) {
         if (Math.pow(2, multi) >= maxRam) {
-            ns.tprint("maxed on servers, killing process")
+            ns.print("maxed on servers, killing process")
             return
         }
 
@@ -45,7 +46,7 @@ export async function main(ns: NS): Promise<void> {
             }
             
             if (Math.min(maxRam, Math.pow(2, multi)) <= ns.getServerMaxRam(peek)) {
-                ns.tprint("bumping ram multi from " + multi + " to " + (multi + 1))
+                ns.print("bumping ram multi from " + multi + " to " + (multi + 1))
                 multi++
                 continue
             }
@@ -62,7 +63,7 @@ export async function main(ns: NS): Promise<void> {
             const name = baseName + pad(nameCounter, 8)
             nameCounter++
             const newBox = ns.purchaseServer(name, ram)
-            ns.tprint({
+            ns.print({
                 purchased: name,
                 ram: ram
             })
