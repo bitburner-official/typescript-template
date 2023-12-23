@@ -35,8 +35,9 @@ export async function main(ns : NS) : Promise<void> {
     )
 
     const targets = servers.filter((srv) => 
-        srv.hasAdminRights && 
-            !inProgress.has(srv.hostname)
+        srv.hasAdminRights 
+        // && 
+        //     !inProgress.has(srv.hostname)
     )
 
     ns.tprintf("In Progress:")
