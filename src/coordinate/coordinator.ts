@@ -71,11 +71,6 @@ export class Coordinator {
         }
         const allocations: Allocation[] = []
 
-        allocateWeaken(ns, allocator, targets)
-            .forEach((elem) => {
-                allocations.push(elem)
-            } 
-        )
         allocateHack(ns, allocator, targets)
             .forEach((elem) => {
                 allocations.push(elem)
@@ -84,6 +79,11 @@ export class Coordinator {
             .forEach((elem) => {
                 allocations.push(elem)
             })
+        allocateWeaken(ns, allocator, targets)
+            .forEach((elem) => {
+                allocations.push(elem)
+            } 
+        )
 
         const byWorker: Map<string, Allocation[]> = new Map()        
 
