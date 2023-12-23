@@ -35,7 +35,7 @@ export function hackCandidates(ns: NS, targets: Server[]): Hack[] {
             security: security
         } as Hack
     }).filter((elem) => elem.threads > 0)
-    inOrder.sort((a, b) => b.earnings - a.earnings)
+    inOrder.sort((a, b) => a.threads - b.threads)
     return inOrder
 }
 

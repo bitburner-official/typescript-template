@@ -28,7 +28,7 @@ export function growCandidates(ns: NS, targets: Server[]): Grow[] {
         } as Grow
     }).filter((elem) => elem.threads > 0)
 
-    inOrder.sort((a, b) => b.earning/b.security - a.earning/a.security)
+    inOrder.sort((a, b) => a.threads - b.threads)
     return inOrder
 }
 

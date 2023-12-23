@@ -28,7 +28,7 @@ export function weakenCandidate(ns: NS, targets: Server[]): Weaken[] {
         } as Weaken
     }).filter((elem) => elem.threads > 0)
 
-    inOrder.sort((a, b) => a.time - b.time)
+    inOrder.sort((a, b) => a.threads - b.threads)
     return inOrder
 }
 
